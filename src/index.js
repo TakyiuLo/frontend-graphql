@@ -48,8 +48,16 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 })
 
+const clientUrl = () => {
+  if (window.location.hostname === 'localhost') {
+    return ''
+  } else {
+    return '/frontend-graphql'
+  }
+}
+
 const appJsx = (
-  <Router>
+  <Router basename={clientUrl()}>
     <ApolloProvider client={client}>
       <App />
     </ApolloProvider>
