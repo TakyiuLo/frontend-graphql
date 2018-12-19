@@ -20,17 +20,15 @@ import { ApolloProvider } from 'react-apollo'
 import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App'
 
-// const client = new ApolloClient({
-//   uri: 'http://localhost:4741/graphql'
-// })
-
 // import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
 import { setContext } from 'apollo-link-context'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
+import apiUrl from './apiConfig'
+
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4741/graphql',
+  uri: apiUrl + '/graphql',
 })
 
 const authLink = setContext((_, { headers }) => {
