@@ -1,0 +1,51 @@
+$success: rgba(195, 230, 203, 1);
+$warning: rgba(255, 243, 205, 1);
+$error: rgba(245, 198, 203, 1);
+$charcoal: #ccc;
+
+.flash-success,
+.flash-warning,
+.flash-error {
+  border: 1px solid $charcoal;
+  display: block;
+  left: 25%;
+  padding: 30px;
+  position: fixed;
+  text-align: center;
+  top: 15%;
+  width: 50%;
+  z-index: 1;
+  box-shadow: 0 2px 2px #ccc;
+  border-radius: 5px;
+}
+
+.flash-success {
+  background: $success;
+  color: rgba(21, 87, 36, 1);
+}
+
+.flash-warning {
+  background-color: $warning;
+  color: rgba(133, 100, 4, 1);
+}
+
+.flash-error {
+  background: $error;
+  color: rgba(114, 28, 36, 1);
+}
+
+@media only screen and (max-width: 600px) {
+  .flash-success,
+  .flash-warning,
+  .flash-error {
+    margin-top: 20px;
+    padding: 5px;
+    font-size: 20px;
+  }
+}
+
+/* putted here because putting in index.scss doesn't work*/
+@import './theme/theme.scss';
+body {
+  background: $primary-scent;
+}

@@ -1,0 +1,32 @@
+/* Adjust these to get your theme */
+$primary-color: rgba(2, 135, 185, 1);
+$scent-offset: 48; /* adjust this by 8 seems better: 24 ,32, 56, 72, 88 */
+
+/* use complement or invert */
+$sub-color: lighten(invert($primary-color), 10);
+$primary-scent: lighten($primary-color, $scent-offset);
+$sub-scent: lighten($sub-color, $scent-offset);
+
+$light-bg: rgba(255, 255, 255, .1);
+$dark-bg: rgba(0, 0, 0, .1);
+
+$light-text: rgba(255, 255, 255, .9);
+$dark-text: rgba(0, 0, 0, .8);
+
+$cal: (red($primary-color) + red($primary-color) + red($primary-color)) / 3;
+@function auto-tone() {
+  @if  $cal > 220 { @return $dark-text; }
+  @else { @return darken($primary-color, 10); }
+}
+@function auto-text() {
+  @if  $cal < 128 { @return $light-text; }
+  @else { @return $dark-text; }
+}
+@function auto-bg() {
+  @if  $cal < 128 { @return $light-bg; }
+  @else { @return $dark-bg; }
+}
+
+$text: auto-tone();
+$bg-auto: auto-bg();
+$text-auto: auto-text();

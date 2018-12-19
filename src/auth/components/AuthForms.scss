@@ -1,0 +1,48 @@
+@import '../../theme/theme.scss';
+
+.auth-form {
+  margin: 100px auto;
+  width: 100%;
+  min-width: 300px;
+  max-width: 500px;
+  display: flex;
+  transition: transform all 1s;
+  & .card-body { /* actual form */
+    border-radius: 3px;
+    width: 100% !important; /* Overriding Bootstrap's importants  */
+    background: $sub-scent;
+    & h3 {
+      color: $text;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 300;
+    }
+    & input {
+      border-color: $text !important;
+      &:focus:not([readonly]) { /* input box underline color */
+        box-shadow: 0 1px 0 0 $text;
+      }
+    }
+    & label {
+      color: $text !important;
+    }
+    & button[type='submit'] {
+      background: $primary-color !important;
+      color: $text-auto !important;
+      transition: all .3s ease-out;
+      &:hover {
+        box-shadow: 0 10px 20px #ccc;
+        transform: translate(0, -1px);
+      }
+    }
+  }
+}
+@media only screen and (max-width: 600px) {
+  .auth-form {
+    margin-top: 20px;
+
+    & .card-body {
+      margin: 10px !important;
+      width: auto !important;
+    }
+  }
+}
