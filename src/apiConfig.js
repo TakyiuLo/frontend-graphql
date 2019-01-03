@@ -1,6 +1,9 @@
 let apiUrl
 const apiUrls = {
-  production: 'https://graphql-auth-template.herokuapp.com',
+  // PostgreSQL
+  production: 'https://graphql-psql-auth-template.herokuapp.com',
+  // MongoDB
+  // production: 'https://graphql-auth-template.herokuapp.com',
   development: 'http://localhost:4741'
 }
 
