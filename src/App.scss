@@ -8,29 +8,34 @@ $charcoal: #ccc;
 .flash-error {
   border: 1px solid $charcoal;
   display: block;
-  left: 25%;
-  padding: 30px;
+  left: 1%;
+  padding: 20px;
   position: fixed;
   text-align: center;
   top: 15%;
-  width: 50%;
+  width: 98%;
   z-index: 1;
   box-shadow: 0 2px 2px #ccc;
-  border-radius: 5px;
+  border-radius: 3px;
+  border-width: 3px;
+  font-size: 1.1em;
 }
 
 .flash-success {
-  background: $success;
+  background: lighten($success, 10%);
+  border-color: darken($success, 10%);
   color: rgba(21, 87, 36, 1);
 }
 
 .flash-warning {
-  background-color: $warning;
+  background: lighten($warning, 10%);
+  border-color: darken($warning, 10%);
   color: rgba(133, 100, 4, 1);
 }
 
 .flash-error {
-  background: $error;
+  background: lighten($error, 10%);
+  border-color: darken($error, 10%);
   color: rgba(114, 28, 36, 1);
 }
 
