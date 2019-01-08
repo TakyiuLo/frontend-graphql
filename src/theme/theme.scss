@@ -1,6 +1,6 @@
 /* Adjust these to get your theme */
-$primary-color: rgba(2, 135, 185, 1);
-$scent-offset: 48; /* adjust this by 8 seems better: 24 ,32, 56, 72, 88 */
+$primary-color: rgba(0, 39, 84, 1);
+$scent-offset: 80; /* adjust this by 8 seems better: 24 ,32, 56, 72, 88 */
 
 /* use complement or invert */
 $sub-color: lighten(invert($primary-color), 10);
