@@ -4,7 +4,8 @@
   .Navbar {
     background: $primary-color;
     color: $text-auto !important; /* navbar-brand */
-    .nav-link { /* nav-link */
+    .nav-link {
+      /* nav-link */
       color: $text-auto !important;
       &.active {
         background-color: $bg-auto; /* active nav-link */
@@ -18,7 +19,7 @@
     .DropdownMenu {
       background: $primary-color;
       & .dropdown-item:hover {
-        background: $sub-color;
+        background: darken($sub-color, 30%);
       }
     }
   }

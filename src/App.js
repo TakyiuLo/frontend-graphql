@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import './App.scss'
 import { Route, Link } from 'react-router-dom'
+import { compose, withApollo } from 'react-apollo'
+import gql from 'graphql-tag'
 
+import { SIGN_IN_PAYLOAD } from './auth/api'
 import AuthenticatedRoute from './auth/components/AuthenticatedRoute'
 import Header from './header/Header'
 import SignUp from './auth/components/SignUp'
@@ -12,61 +15,55 @@ import ChangePassword from './auth/components/ChangePassword'
 import Home from './home/Home'
 
 class App extends Component {
-  constructor () {
+  constructor() {
     super()
 
     this.state = {
-      user: null,
       flashMessage: '',
       flashType: null
     }
   }
-
-  setUser = user => {
-    // console.log(user)
-    this.setState({ user })
-    localStorage.setItem('SignInPayload_Token', user.token)
-  }
-
-  clearUser = () => this.setState({ user: null })
 
   flash = (message, type) => {
     this.setState({ flashMessage: message, flashType: type })
 
     clearTimeout(this.messageTimeout)
 
-    this.messageTimeout = setTimeout(() => this.setState({flashMessage: null
-    }), 2000)
+    this.messageTimeout = setTimeout(
+      () => this.setState({ flashMessage: null }),
+      2000
+    )
   }
 
-  render () {
-    const { flashMessage, flashType, user } = this.state
+  render() {
+    const { flashMessage, flashType } = this.state
+    const { setAuth, client } = this.props
+
+    const result = client.watchQuery({ query: SIGN_IN_PAYLOAD }).currentResult()
+    const user = result.data.user
+    setAuth(user && user.token) // setAuth
 
     return (
       <React.Fragment>
         <Header user={user} />
         {flashMessage && <h3 className={flashType}>{flashMessage}</h3>}
-        
+
         <main className="container">
-          <Route path='/sign-up' render={() => (
-            <SignUp flash={this.flash} setUser={this.setUser} />
-          )} />
-          <Route path='/sign-in' render={() => (
-            <SignIn flash={this.flash} setUser={this.setUser} />
-          )} />
-          <AuthenticatedRoute user={user} path='/sign-out' render={() => (
-            <SignOut flash={this.flash} clearUser={this.clearUser} user={user} />
-          )} />
-          <AuthenticatedRoute user={user} path='/change-password' render={() => (
-            <ChangePassword flash={this.flash} user={user} />
-          )} />
-          <Route user={user} exact path='/' render={() => (
-            <Home />
-          )} />
+          <Route path="/sign-up" render={() => <SignUp flash={this.flash} />} />
+          <Route path="/sign-in" render={() => <SignIn flash={this.flash} />} />
+          <AuthenticatedRoute
+            path="/sign-out"
+            render={() => <SignOut flash={this.flash} />}
+          />
+          <AuthenticatedRoute
+            path="/change-password"
+            render={() => <ChangePassword flash={this.flash} />}
+          />
+          <Route user={user} exact path="/" render={() => <Home />} />
         </main>
       </React.Fragment>
     )
   }
 }
 
-export default App
+export default compose(withApollo)(App)

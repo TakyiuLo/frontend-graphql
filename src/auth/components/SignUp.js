@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { withRouter } from 'react-router-dom'
 
-import { SIGN_UP, SIGN_IN } from '../api'
+import { SIGN_UP, SIGN_IN, SIGN_IN_PAYLOAD } from '../api'
 import messages from '../messages'
 import apiUrl from '../../apiConfig'
 
@@ -23,7 +23,7 @@ import {
 class SignUp extends Component {
   constructor() {
     super()
-    
+
     this.state = {
       email: '',
       password: '',
@@ -32,33 +32,33 @@ class SignUp extends Component {
     this.state_default = Object.assign({}, this.state)
   }
 
-  handleChange = event => this.setState({
-    [event.target.name]: event.target.value
-  })
+  handleChange = event =>
+    this.setState({
+      [event.target.name]: event.target.value
+    })
 
   clearInputs = () => this.setState(this.state_default)
-  
+
   signUp = (event, args) => {
     event.preventDefault()
-    const { 
-      signUp_Mutation, signUp_loading,
-      signIn_Mutation, signIn_loading
+    const {
+      signUp_Mutation,
+      signUp_loading,
+      signIn_Mutation,
+      signIn_loading
     } = args
-    const { flash, history, setUser } = this.props
+    const { flash, history, setAuth } = this.props
 
-    // Not using handleErrors or 'res.ok' anymore because GraphQL does not 
+    // Not using handleErrors or 'res.ok' anymore because GraphQL does not
     // send 400 or 500 errors.
     signUp_Mutation()
       .then(() => signIn_Mutation())
-      .then(res => ({ user: res.data.signIn }))
-      .then(res => setUser(res.user))
       .then(() => flash(messages.signUpSuccess, 'flash-success'))
       .then(() => history.push('/'))
       .catch(() => flash(messages.signUpFailure, 'flash-error'))
   }
 
   render() {
-    
     /*
      * Mutation Component required
      *   1. - GraphQL mutation(from api.js)
@@ -67,7 +67,7 @@ class SignUp extends Component {
      *      @params (mutation_function, mutation_status)
      *      @returns must return "something" <component or atleast empty string>
      */
-     
+
     /* We have two <Mutation> here:
      *   - One for signUp, and One for signIn
      *   - The signIn <Mutation> is the return of signUp's child function, so
@@ -76,10 +76,10 @@ class SignUp extends Component {
      * Put both mutation functions and statuses into <Form>
      * And Finally, rendered the signUp <Mutation>
      */
-    
+
     // becareful GraphQL variables require exact Inputs
     const { email, password, password_confirmation } = this.state
-     
+
     const form = args => (
       <Row className="auth-form">
         <Col md="12">
@@ -98,27 +98,31 @@ class SignUp extends Component {
                     value={email}
                     label="Type Your email"
                     type="email"
-                    size="sm"/>
+                    size="sm"
+                  />
                   <Input
                     name="password"
                     onChange={this.handleChange}
                     value={password}
                     label="Type Your password"
                     type="password"
-                    size="sm"/>
+                    size="sm"
+                  />
                   <Input
                     name="password_confirmation"
                     onChange={this.handleChange}
                     value={password_confirmation}
                     label="Confirm Your password"
                     type="password"
-                    size="sm"/>
+                    size="sm"
+                  />
                   <Row className="d-flex align-items-center mb-4">
                     <Col md="12" className="text-center">
-                      <Button 
+                      <Button
                         type="submit"
                         onClick={event => this.signUp(event, args)}
-                        className="btn btn-primary btn-block btn-rounded z-depth-1">
+                        className="btn btn-primary btn-block btn-rounded z-depth-1"
+                      >
                         Register
                       </Button>
                     </Col>
@@ -135,18 +139,25 @@ class SignUp extends Component {
     const signUpInput = { credentials: this.state }
 
     const signIn_component = args => (
-      <Mutation mutation={SIGN_IN} variables={signInInput}>
-        {(signIn_Mutation, signIn_status) => (
+      <Mutation
+        mutation={SIGN_IN}
+        variables={signInInput}
+        // write to cache
+        update={(client, { data: { signIn } }) => {
+          client.writeQuery({ query: SIGN_IN_PAYLOAD, data: { user: signIn } })
+        }}
+      >
+        {(signIn_Mutation, signIn_status) =>
           form({ ...args, signIn_Mutation, signIn_status })
-        )}
+        }
       </Mutation>
-    )  
-    
+    )
+
     const signUp_component = args => (
       <Mutation mutation={SIGN_UP} variables={signUpInput}>
-        {(signUp_Mutation, signUp_status) => (
+        {(signUp_Mutation, signUp_status) =>
           signIn_component({ ...args, signUp_Mutation, signUp_status })
-        )}
+        }
       </Mutation>
     )
 

@@ -13,28 +13,27 @@ import messages from '../messages'
 
 class Temp extends Component {
   componentDidMount() {
-    const { flash, history, clearUser, mutate, client } = this.props
+    const { flash, history, mutate, client } = this.props
+
     mutate()
       .finally(() => client.clearStore())
-      .finally(() => localStorage.clear())
       .finally(() => flash(messages.signOutSuccess, 'flash-success'))
       .finally(() => history.push('/'))
-      .finally(() => clearUser())
   }
-  render () {
+  render() {
     return '' // may make a loading icon
   }
 }
 
 const SignOut = props => (
-  <Mutation mutation={SIGN_OUT} >
+  <Mutation mutation={SIGN_OUT}>
     {(signOut_Mutation, signOut_status) => (
-      <Temp {...props} mutate={signOut_Mutation}/>
+      <Temp {...props} mutate={signOut_Mutation} />
     )}
   </Mutation>
 )
 
-export default compose (
+export default compose(
   withRouter,
   withApollo
 )(SignOut)

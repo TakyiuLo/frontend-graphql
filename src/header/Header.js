@@ -49,7 +49,7 @@ class Header extends Component {
   render() {
     const { collapse, isWideEnough } = this.state
     const { user } = this.props
-    
+
     const authenticatedOptions = (
       <React.Fragment>
         <NavItem>
@@ -64,7 +64,7 @@ class Header extends Component {
                   <Fa className="ml-2" icon="exchange" size="xs" />
                 </NavLink>
               </DropdownItem>
-              <DropdownItem >
+              <DropdownItem>
                 <NavLink to="/sign-out">
                   Sign Out
                   <Fa className="ml-2" icon="sign-out" size="xs" />
@@ -120,7 +120,11 @@ class Header extends Component {
           <Collapse isOpen={collapse} navbar>
             <NavbarNav left>{alwaysOptions}</NavbarNav>
             <NavbarNav right>
-              {user && <NavItem><NavLink to='/'>Welcome, {user.email}</NavLink></NavItem>}
+              {user && (
+                <NavItem>
+                  <NavLink to="/">Welcome, {user.email}</NavLink>
+                </NavItem>
+              )}
               {user ? authenticatedOptions : unauthenticatedOptions}
             </NavbarNav>
           </Collapse>

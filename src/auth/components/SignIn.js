@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 
+import gql from 'graphql-tag'
 import { Mutation } from 'react-apollo'
-import { SIGN_IN } from '../api'
+import { SIGN_IN, SIGN_IN_PAYLOAD } from '../api'
 import messages from '../messages'
 import apiUrl from '../../apiConfig'
 
@@ -22,7 +23,7 @@ import {
 } from 'mdbreact'
 
 class SignIn extends Component {
-  constructor () {
+  constructor() {
     super()
 
     this.state = {
@@ -33,31 +34,30 @@ class SignIn extends Component {
     this.state_default = Object.assign({}, this.state)
   }
 
-  handleChange = event => this.setState({
-    [event.target.name]: event.target.value
-  })
-  
+  handleChange = event =>
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+
   clearInputs = () => this.setState(this.state_default)
 
   signIn = (event, args) => {
     event.preventDefault()
 
     const { signIn_Mutation, signIn_status } = args
-    const { flash, history, setUser } = this.props
+    const { flash, history, client } = this.props
 
     signIn_Mutation()
-      .then(res => ({ user: res.data.signIn }))
-      .then(res => setUser(res.user))
       .then(() => flash(messages.signInSuccess, 'flash-success'))
       .then(() => history.push('/'))
       .catch(() => flash(messages.signInFailure, 'flash-error'))
   }
-  
+
   mouseEnter = () => {
     this.setState({ mouseEnter: !this.state.mouseEnter })
   }
-  
-  render () {
+
+  render() {
     const { email, password, mouseEnter } = this.state
 
     const form = args => (
@@ -78,20 +78,23 @@ class SignIn extends Component {
                     value={email}
                     label="Type Your email"
                     type="email"
-                    size="sm"/>
+                    size="sm"
+                  />
                   <Input
                     name="password"
                     onChange={this.handleChange}
                     value={password}
                     label="Type Your password"
                     type="password"
-                    size="sm" />
+                    size="sm"
+                  />
                   <Row className="d-flex align-items-center mb-4">
                     <Col md="12" className="text-center">
-                      <Button 
+                      <Button
                         type="submit"
                         onClick={e => this.signIn(e, args)}
-                        className="btn btn-primary btn-block btn-rounded z-depth-1">
+                        className="btn btn-primary btn-block btn-rounded z-depth-1"
+                      >
                         Login
                       </Button>
                     </Col>
@@ -103,17 +106,24 @@ class SignIn extends Component {
         </Col>
       </Row>
     )
-    
+
     const signInInput = { credentials: { email, password } }
-    
+
     const signIn_component = args => (
-      <Mutation mutation={SIGN_IN} variables={signInInput}>
-        {(signIn_Mutation, signIn_status) => (
+      <Mutation
+        mutation={SIGN_IN}
+        variables={signInInput}
+        // write to cache
+        update={(client, { data: { signIn } }) => {
+          client.writeQuery({ query: SIGN_IN_PAYLOAD, data: { user: signIn } })
+        }}
+      >
+        {(signIn_Mutation, signIn_status) =>
           form({ ...args, signIn_Mutation, signIn_status })
-        )}
+        }
       </Mutation>
     )
-    
+
     return signIn_component()
   }
 }
