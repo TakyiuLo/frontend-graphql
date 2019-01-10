@@ -20,7 +20,8 @@ class App extends Component {
 
     this.state = {
       flashMessage: '',
-      flashType: null
+      flashType: null,
+      user: null
     }
   }
 
@@ -35,32 +36,41 @@ class App extends Component {
     )
   }
 
-  render() {
-    const { flashMessage, flashType } = this.state
+  checkAuthentication() {
     const { setAuth, client } = this.props
-
     const result = client.watchQuery({ query: SIGN_IN_PAYLOAD }).currentResult()
     const user = result.data.user
+    if (user !== this.state.user) {
+      this.setState({ user })
+    }
     setAuth(user && user.token) // setAuth
+  }
+
+  componentDidUpdate() {
+    this.checkAuthentication()
+  }
+
+  render() {
+    const { flashMessage, flashType, user } = this.state
+    const { setAuth, client } = this.props
 
     return (
       <React.Fragment>
         <Header user={user} />
         {flashMessage && <h3 className={flashType}>{flashMessage}</h3>}
 
-        <main className="container">
-          <Route path="/sign-up" render={() => <SignUp flash={this.flash} />} />
-          <Route path="/sign-in" render={() => <SignIn flash={this.flash} />} />
-          <AuthenticatedRoute
-            path="/sign-out"
-            render={() => <SignOut flash={this.flash} />}
-          />
-          <AuthenticatedRoute
-            path="/change-password"
-            render={() => <ChangePassword flash={this.flash} />}
-          />
-          <Route user={user} exact path="/" render={() => <Home />} />
-        </main>
+        <Route path="/sign-up" render={() => <SignUp flash={this.flash} />} />
+        <Route path="/sign-in" render={() => <SignIn flash={this.flash} />} />
+        <AuthenticatedRoute
+          path="/sign-out"
+          render={() => <SignOut flash={this.flash} />}
+        />
+        <AuthenticatedRoute
+          path="/change-password"
+          render={() => <ChangePassword flash={this.flash} />}
+        />
+
+        <Route exact path="/" render={() => <Home />} />
       </React.Fragment>
     )
   }

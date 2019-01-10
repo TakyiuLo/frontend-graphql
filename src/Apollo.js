@@ -22,11 +22,13 @@ import apiUrl from './apiConfig'
 const Apollo = () => {
   let authorization = ''
 
+  // set authorization
   const setAuth = token => (authorization = `Token token=${token}`)
 
+  // define our url
   const uri = apiUrl + '/graphql'
 
-  // our basic link1
+  // our basic link
   const httpLink = createHttpLink({ uri })
 
   // we need this to set authorization header with token for authenticate requests
@@ -40,7 +42,7 @@ const Apollo = () => {
 
   return (
     <ApolloProvider client={client}>
-      <App setAuth={setAuth} client={client} />
+      <App setAuth={setAuth} />
     </ApolloProvider>
   )
 }
