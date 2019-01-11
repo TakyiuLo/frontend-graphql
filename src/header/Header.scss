@@ -3,23 +3,26 @@
 .main-header {
   .Navbar {
     background: $primary-color;
-    color: $text-auto !important; /* navbar-brand */
+    color: $text-auto; /* navbar-brand */
     .nav-link {
       /* nav-link */
-      color: $text-auto !important;
+      color: $text-auto;
       &.active {
         background-color: $bg-auto; /* active nav-link */
       }
       &.HomeLink {
-        width: 100% !important;
+        width: 100%;
         color: $text-auto;
-        height: 100% !important;
+        height: 100%;
       }
     }
     .DropdownMenu {
       background: $primary-color;
       & .dropdown-item:hover {
         background: darken($sub-color, 30%);
+        & .nav-link {
+          color: $primary-color;
+        }
       }
     }
   }
