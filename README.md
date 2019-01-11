@@ -8,6 +8,11 @@ about it.
 
 - MDBReact, Apollo Client, GraphQL
 
+##### How to run
+
+- `npm install`
+- `npm start`
+
 ##### Plan Taken
 
 1. install dependences `npm install apollo-boost react-apollo graphql --save`
@@ -26,6 +31,7 @@ about it.
   cleaner codes. See `src/example_redundant/SignIn.js` for example
 - Apollo-client vs Apollo-boost: Boost does automatic stuffs, client does manual
   stuffs
+- Sometimes Heroku is being stupid(sleeping), you can run `heroku restart` to wake it up.
 
 ##### Using My React Auth Template
 
