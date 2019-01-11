@@ -9,6 +9,7 @@ import gql from 'graphql-tag'
  * 1. Directly retrieve, client.cache.data.data['...']
  * 2. Write Query Model, use writeQuery and readQuery
  * 3. watchQuery to watch any change to query
+ * You can use <ApolloConsumer> like React Context Consumer
  */
 
 // cache is basically Store
