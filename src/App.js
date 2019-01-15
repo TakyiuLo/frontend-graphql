@@ -20,8 +20,7 @@ class App extends Component {
 
     this.state = {
       flashMessage: '',
-      flashType: null,
-      user: null
+      flashType: null
     }
   }
 
@@ -40,9 +39,7 @@ class App extends Component {
     const { setAuth, client } = this.props
     const result = client.watchQuery({ query: SIGN_IN_PAYLOAD }).currentResult()
     const user = result.data.user
-    if (user !== this.state.user) {
-      this.setState({ user })
-    }
+
     setAuth(user && user.token) // setAuth
   }
 
@@ -56,7 +53,7 @@ class App extends Component {
 
     return (
       <React.Fragment>
-        <Header user={user} />
+        <Header />
         {flashMessage && <h3 className={flashType}>{flashMessage}</h3>}
 
         <Route path="/sign-up" render={() => <SignUp flash={this.flash} />} />

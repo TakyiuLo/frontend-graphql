@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import './Header.scss'
 
+import { compose, withApollo } from 'react-apollo'
+import { SIGN_IN_PAYLOAD } from '../auth/api'
+
 import {
   Navbar,
   NavbarBrand,
@@ -48,10 +51,15 @@ class Header extends Component {
   }
   render() {
     const { collapse, isWideEnough } = this.state
-    const { user } = this.props
+    const { client } = this.props
+    const result = client.watchQuery({ query: SIGN_IN_PAYLOAD }).currentResult()
+    const user = result.data.user
 
     const authenticatedOptions = (
       <React.Fragment>
+        <NavItem>
+          <NavLink to="/">Welcome, {user && user.email}</NavLink>
+        </NavItem>
         <NavItem>
           <Dropdown size="md">
             <DropdownToggle nav caret>
@@ -120,11 +128,6 @@ class Header extends Component {
           <Collapse isOpen={collapse} navbar>
             <NavbarNav left>{alwaysOptions}</NavbarNav>
             <NavbarNav right>
-              {user && (
-                <NavItem>
-                  <NavLink to="/">Welcome, {user.email}</NavLink>
-                </NavItem>
-              )}
               {user ? authenticatedOptions : unauthenticatedOptions}
             </NavbarNav>
           </Collapse>
@@ -134,4 +137,4 @@ class Header extends Component {
   }
 }
 
-export default Header
+export default compose(withApollo)(Header)
