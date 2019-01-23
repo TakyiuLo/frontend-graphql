@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, memo } from 'react'
 import './App.scss'
 import { Route, Link } from 'react-router-dom'
 import { compose, withApollo } from 'react-apollo'
@@ -13,6 +13,10 @@ import SignOut from './auth/components/SignOut'
 import ChangePassword from './auth/components/ChangePassword'
 
 import Home from './home/Home'
+
+export const FlashContext = React.createContext()
+
+const Flash = ({ message, type }) => <h3 className={type}>{message}</h3>
 
 class App extends Component {
   constructor() {
@@ -48,26 +52,27 @@ class App extends Component {
   }
 
   render() {
-    const { flashMessage, flashType, user } = this.state
-    const { setAuth, client } = this.props
+    const { flashMessage, flashType } = this.state
 
     return (
       <React.Fragment>
-        <Header />
-        {flashMessage && <h3 className={flashType}>{flashMessage}</h3>}
+        <FlashContext.Provider value={this.flash}>
+          <Header />
+          {flashMessage && <Flash message={flashMessage} type={flashType} />}
 
-        <Route path="/sign-up" render={() => <SignUp flash={this.flash} />} />
-        <Route path="/sign-in" render={() => <SignIn flash={this.flash} />} />
-        <AuthenticatedRoute
-          path="/sign-out"
-          render={() => <SignOut flash={this.flash} />}
-        />
-        <AuthenticatedRoute
-          path="/change-password"
-          render={() => <ChangePassword flash={this.flash} />}
-        />
+          <Route path="/sign-up" render={() => <SignUp flash={this.flash} />} />
+          <Route path="/sign-in" render={() => <SignIn />} />
+          <AuthenticatedRoute
+            path="/sign-out"
+            render={() => <SignOut flash={this.flash} />}
+          />
+          <AuthenticatedRoute
+            path="/change-password"
+            render={() => <ChangePassword flash={this.flash} />}
+          />
 
-        <Route exact path="/" render={() => <Home />} />
+          <Route exact path="/" render={() => <Home />} />
+        </FlashContext.Provider>
       </React.Fragment>
     )
   }

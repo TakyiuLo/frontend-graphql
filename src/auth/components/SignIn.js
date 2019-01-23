@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 
 import gql from 'graphql-tag'
-import { Mutation } from 'react-apollo'
+import { Mutation, compose } from 'react-apollo'
 import { SIGN_IN, SIGN_IN_PAYLOAD } from '../api'
 import messages from '../messages'
 import apiUrl from '../../apiConfig'
+import { FlashContext } from '../../App'
 
 import './AuthForms.scss'
 import {
@@ -41,10 +42,10 @@ class SignIn extends Component {
 
   clearInputs = () => this.setState(this.state_default)
 
-  signIn = (event, args) => {
+  signIn = (event, props) => {
     event.preventDefault()
 
-    const { signIn_Mutation, signIn_status } = args
+    const { signIn_Mutation, signIn_status } = props
     const { flash, history, client } = this.props
 
     signIn_Mutation()
@@ -60,12 +61,12 @@ class SignIn extends Component {
   render() {
     const { email, password, mouseEnter } = this.state
 
-    const form = args => (
+    const form = props => (
       <Row className="auth-form">
         <Col md="12">
           <Card>
             <CardBody>
-              <fieldset disabled={args.signIn_status.loading}>
+              <fieldset disabled={props.signIn_status.loading}>
                 <form>
                   <div className="blue-grey-text text-center">
                     <h3 className="mb-5">
@@ -92,7 +93,7 @@ class SignIn extends Component {
                     <Col md="12" className="text-center">
                       <Button
                         type="submit"
-                        onClick={e => this.signIn(e, args)}
+                        onClick={e => this.signIn(e, props)}
                         className="btn btn-primary btn-block btn-rounded z-depth-1"
                       >
                         Login
@@ -109,7 +110,7 @@ class SignIn extends Component {
 
     const signInInput = { credentials: { email, password } }
 
-    const signIn_component = args => (
+    const signIn_component = props => (
       <Mutation
         mutation={SIGN_IN}
         variables={signInInput}
@@ -119,13 +120,19 @@ class SignIn extends Component {
         }}
       >
         {(signIn_Mutation, signIn_status) =>
-          form({ ...args, signIn_Mutation, signIn_status })
+          form({ ...props, signIn_Mutation, signIn_status })
         }
       </Mutation>
     )
 
-    return signIn_component()
+    const FlashConsumer = props => (
+      <FlashContext.Consumer>
+        {({ flash }) => signIn_component({ ...props, flash })}
+      </FlashContext.Consumer>
+    )
+
+    return FlashConsumer()
   }
 }
 
-export default withRouter(SignIn)
+export default compose(withRouter)(SignIn)
