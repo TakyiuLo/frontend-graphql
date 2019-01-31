@@ -56,7 +56,7 @@ class App extends Component {
 
     return (
       <React.Fragment>
-        <FlashContext.Provider value={this.flash}>
+        <FlashContext.Provider value={{ flash: this.flash }}>
           <Header />
           {flashMessage && <Flash message={flashMessage} type={flashType} />}
 

@@ -45,9 +45,9 @@ class SignIn extends Component {
   signIn = (event, props) => {
     event.preventDefault()
 
-    const { signIn_Mutation, signIn_status } = props
-    const { flash, history, client } = this.props
-
+    const { signIn_Mutation, signIn_status, flash } = props
+    const { history, client } = this.props
+    console.log(flash)
     signIn_Mutation()
       .then(() => flash(messages.signInSuccess, 'flash-success'))
       .then(() => history.push('/'))
