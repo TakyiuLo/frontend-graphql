@@ -47,7 +47,7 @@ class SignIn extends Component {
 
     const { signIn_Mutation, signIn_status, flash } = props
     const { history, client } = this.props
-    console.log(flash)
+
     signIn_Mutation()
       .then(() => flash(messages.signInSuccess, 'flash-success'))
       .then(() => history.push('/'))
